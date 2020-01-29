@@ -1,0 +1,4 @@
+1、babel.min.js : 将ES6转为 ES5语法。 解析JSX语法代码为纯JS 语法代码的库
+2、react.js ： React 的核心库
+3、react-dom.js : 提供操作DOM 的react 扩展库
+

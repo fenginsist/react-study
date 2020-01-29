@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>07_component_composing</title>
+</head>
+<body>
+<div id="example"></div>
+<script type="text/javascript" src="../js/react.development.js"></script>
+<script type="text/javascript" src="../js/react-dom.development.js"></script>
+<script type="text/javascript" src="../js/prop-types.js"></script>
+<script type="text/javascript" src="../js/babel.min.js"></script>
+<script type="text/babel">
+
+    /**
+     * 界面中有一个文本框和按钮，按钮中显示下面的几个数据
+     * 下面是一个 ul 列表，默认遍历 数组中的数据。
+     * 事件：点击按钮，文本框中的数据出现在下面中的 ul 列表中
+     */
+
+    /**
+     *问题:数据保存在哪个组件内？
+     *     看数据是某个组件需要（给它），还是某些组件需要（给共同的父组件）
+     *问题2：需要在子组件中改变父组件的状态
+     *      子组件不能直接改变父组件的状态
+     *      状态在哪个组件，更新状态的行为（方法）就应该定义在哪个组件
+     *      解决：父组件定义函数，传递给子组件，子组件调用
+     *
+     *组件化编写功能的流程
+     *      1、拆分组件
+     *      2、实现静态组件（只有静态界面，没有动态数据和交互）
+     *      3、实现动态组件
+     *          1）实现初始化数据动态显示
+     *          2) 实现交互功能
+     */
+        // 主界面
+    class Counter extends React.Component {
+        constructor(props) {
+            super(props)
+            // 初始化状态
+            this.state = {
+                todos: ['吃饭', '睡觉', '打豆豆']
+            }
+            this.addTodos = this.addTodos.bind(this)
+        }
+
+        // 定义一个添加的函数
+        addTodos(todo) {
+            // this.state.todos.unshift(todo)  //不能这么做
+            const {todos} = this.state
+            todos.unshift(todo)
+            // 更新状态
+            this.setState({todos})
+        }
+
+        render() {
+            const {todos} = this.state
+            return (
+                <div>
+                    <h1>Simple TODO List</h1>
+                    <Add count={todos.length} addTodos={this.addTodos}/>
+                    <List todos={todos}/>
+                </div>
+            )
+        }
+    }
+
+    // 子界面
+    class Add extends React.Component {
+        constructor(prop) {
+            super(prop)
+            this.addData = this.addData.bind(this)
+        }
+
+        render() {
+            return (
+                <div>
+                    <input type="text" ref={input => this.todoInput = input}/>
+                    <button onClick={this.addData}>add # {this.props.count + 1} </button>
+                </div>
+            )
+        }
+
+        addData() {
+            // 1、读取输入的数据
+            const data = this.todoInput.value.trim();
+            // 2、检查合法性
+            if (!data) {
+                return
+            }
+            // 3、添加
+            console.log(data)
+            this.props.addTodos(data)
+            // 4、清除输入
+            this.todoInput.value = ''
+        }
+    }
+
+    // 数据校验，放在上面出错
+    Add.propTypes = {
+        count: PropTypes.number.isRequired,
+        addTodos: PropTypes.func.isRequired
+    }
+
+    // 子界面
+    class List extends React.Component {
+        render() {
+            const {todos} = this.props;
+            /* => : 箭头函数的意义，有两个：函数、return， 这里如果加 {}:方法体 的话，里面一定要有 return*/
+            /*todos.map((value, index)=><li key={index}>{value}</li>)*/
+            return (
+                <div>
+                    <ul>
+                        {todos.map((value, index) => {
+                            return <li key={index}>{value}</li>
+                        })}
+                    </ul>
+                </div>
+            )
+        }
+    }
+
+    List.propTypes = {
+        todos: PropTypes.array.isRequired
+    }
+    ReactDOM.render(<Counter/>, document.getElementById('example'))
+</script>
+</body>
+</html>

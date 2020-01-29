@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>05_component_props</title>
+</head>
+<body>
+<div id="example1"></div>
+<div id="example2"></div>
+<div id="example3"></div>
+<script type="text/javascript" src="../js/react.development.js"></script>
+<script type="text/javascript" src="../js/react-dom.development.js"></script>
+<script type="text/javascript" src="../js/prop-types.js"></script>
+<script type="text/javascript" src="../js/babel.min.js"></script>
+
+<script type="text/babel">
+    /**
+     * props属性 和 prop-types.js    prop-types.js: 对值进行设定
+     * 需求：自定义用来显示一个人员信息的组件，效果如页面，说明
+     * 1、如果性别没有指定，默认为男
+     * 2、如果年龄没有指定，默认为18
+     */
+    // 1、定义组件
+    /**
+     * 使用 对象组件
+     * 组件对象有三个 state props refs
+     **/
+    class Person extends React.Component{
+        render(){
+            console.log(this)
+            return(
+                <ul>
+                    <li>姓名：{this.props.name}</li>
+                    <li>年龄：{this.props.age}</li>
+                    <li>性别：{this.props.sex}</li>
+                </ul>
+            )
+        }
+    }
+    // 指定属性 默认值
+    Person.defaultProps = {
+        age: 18,
+        sex: '男'
+    }
+    // 对 props 中的属性值进行类型限制和必要性限制
+    Person.propTypes = {
+        name: PropTypes.string.isRequired,
+        age: PropTypes.number
+    }
+
+    // 2、渲染组件
+    const p1 = {
+        name: 'Tom',
+        age: 18,
+        sex: '女'
+    }
+    ReactDOM.render(<Person name={p1.name} age={p1.age} sex={p1.sex} />, document.getElementById("example1"))
+
+    const p2 = {
+        name: 'Jack',
+    }
+    ReactDOM.render(<Person name={p2.name} age={20}  />, document.getElementById("example2"))
+
+    /**
+     *  ... 的作用
+     *  1、打包
+     *  function fn(...as){}  fn(1, 2, 3)  : 打包的意思
+     *  2、解包
+     *  const arr1 = [1, 2, 3]  const arr2 = [6, ...arr1, 9]  ：解包的意思
+     *
+     * @type {{name: string}}
+     */
+    const p3 = {
+        name: 'Feng',
+    }
+    ReactDOM.render(<Person  {...p3} />, document.getElementById("example3"))
+</script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>06_Component_refs_event</title>
+</head>
+<body>
+<div id="example1"></div>
+<script type="text/javascript" src="../js/react.development.js"></script>
+<script type="text/javascript" src="../js/react-dom.development.js"></script>
+<script type="text/javascript" src="../js/prop-types.js"></script>
+<script type="text/javascript" src="../js/babel.min.js"></script>
+<script type="text/babel">
+        /**
+         * 事件 与 ref
+         * 需求：自定义组件，功能说明
+         * 1、界面如图所示
+         * 2、点击按钮，提示第一个输入框中的值
+         * 3、当第二个输入框失去焦点时，提示这个输入框中的值
+         */
+        // 1、创建组件
+    class MyComponent extends React.Component {
+        constructor(props) {
+            super(props)
+            this.showInput = this.showInput.bind(this)
+            this.handleBlur = this.handleBlur.bind(this)
+        }
+
+        showInput() {
+            const value = this.refs.content.value;
+            alert(value)
+            alert(this.input.value)
+        }
+        // 事件都有一个固定的形参
+        handleBlur(event) {
+            console.log(event)
+            console.log(event.target)   //指的是标签
+            // event.target : 指的是 input 表单框
+            alert(event.target.value)
+        }
+
+        /* 最后一个比较特别，操作的 dom 元素，是发生事件的元素。*/
+        render() {
+            return (
+                <div>
+                    <input type="text" ref="content"/> &nbsp;&nbsp;
+                    <input type="text" ref={input => this.input = input}/> &nbsp;&nbsp;
+                    <button onClick={this.showInput}>提升输入</button>
+                    &nbsp;&nbsp;
+                    <input type="text" onBlur={this.handleBlur} placeholder="失去焦点提示内容"/>
+                </div>
+            )
+        }
+    }
+
+    // 2、渲染组件
+    ReactDOM.render(<MyComponent/>, document.getElementById("example1"))
+</script>
+</body>
+</html>

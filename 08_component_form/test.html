@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>08_component_form</title>
+</head>
+<body>
+<div id="example"></div>
+<script type="text/javascript" src="../js/react.development.js"></script>
+<script type="text/javascript" src="../js/react-dom.development.js"></script>
+<script type="text/javascript" src="../js/prop-types.js"></script>
+<script type="text/javascript" src="../js/babel.min.js"></script>
+<script type="text/babel">
+    /**
+     * 需求： 自定义包含表单的组件
+     *  1、界面如下所示
+     *  2、输入用户名密码后，点击登陆提示输入信息
+     *  3、不提交表单  event.preventDefault()
+     */
+    class LoginForm extends React.Component {
+        constructor(prop) {
+            super(prop)
+            this.state = {
+                pwd: ''
+            }
+            this.handleLogin = this.handleLogin.bind(this)
+            this.handleChange = this.handleChange.bind(this)
+        }
+
+        render() {
+            return (
+                /**
+                 * 用户名 为非受控组件
+                 * 密码 为受控组件
+                 */
+                <form action="/test" onSubmit={this.handleLogin}>
+                    用户名：<input type="text" ref={input => this.username = input}/>
+                    密码： <input type="password" value={this.state.pwd} ref={input => this.password = input}
+                               onChange={this.handleChange}/>
+                    <input type="submit" value="登陆"/>
+                </form>
+            )
+        }
+
+        handleLogin(event) {
+            const uname = this.username.value  // 操作DOM
+            const {pwd} = this.state           // 操作react 属性
+            alert(`准备提交的用户名为${uname}, 密码${pwd}`)
+            // 阻止事件的默认行为（提交）
+            event.preventDefault()
+        }
+
+        handleChange(event) {
+            // 读取输入框的值
+            const password = event.target.value
+            // 更新pwd的状态
+            this.setState({pwd: password})
+        }
+    }
+
+    ReactDOM.render(<LoginForm/>, document.getElementById('example'))
+</script>
+</body>
+</html>
